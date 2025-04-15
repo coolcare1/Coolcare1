@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CoolCare AC Service</title>
+  <style>
+    body { font-family: sans-serif; background: #f0f8ff; padding: 20px; }
+    .container { max-width: 400px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    input, select { width: 100%; padding: 10px; margin: 10px 0; }
+    button { padding: 10px; background: #007bff; color: white; border: none; cursor: pointer; width: 100%; }
+    #msg { margin-top: 10px; color: green; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>CoolCare AC Service Booking</h2>
+    <form id="bookingForm">
+      <input type="text" id="name" placeholder="Your Name" required />
+      <input type="tel" id="phone" placeholder="Phone Number" required />
+      <select id="service" required>
+        <option value="">Select Service</option>
+        <option value="AC Repair">AC Repair</option>
+        <option value="AC Installation">AC Installation</option>
+        <option value="AC Maintenance">AC Maintenance</option>
+      </select>
+      <input type="date" id="date" required />
+      <button type="submit">Book Now</button>
+    </form>
+    <div id="msg"></div>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDWpgrzIxkynMVVR8CU_9zz0oBG5nWnoOA",
+      authDomain: "coolcare1-7d498.firebaseapp.com",
+      databaseURL: "https://coolcare1-7d498-default-rtdb.firebaseio.com",
+      projectId: "coolcare1-7d498",
+      storageBucket: "coolcare1-7d498.appspot.com",
+      messagingSenderId: "627710064940",
+      appId: "1:627710064940:web:6d212435c981e89a40d489",
+      measurementId: "G-38QR50W03H"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    document.getElementById('bookingForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const phone = document.getElementById('phone').value;
+      const service = document.getElementById('service').value;
+      const date = document.getElementById('date').value;
+
+      db.ref('bookings').push({ name, phone, service, date })
+        .then(() => {
+          document.getElementById('msg').innerText = "Booking Successful!";
+          document.getElementById('bookingForm').reset();
+        })
+        .catch(error => {
+          document.getElementById('msg').innerText = "Something went wrong.";
+        });
+    });
+  </script>
+</body>
+</html>
